@@ -1,0 +1,44 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.landing {
+    background: url('../images/landing_page.jpg') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+}
+
+.landing-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 40px;
+    border-radius: 12px;
+}
+
+.landing h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.landing p {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+}
+
+.btn {
+    padding: 12px 25px;
+    background: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
