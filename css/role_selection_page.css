@@ -1,0 +1,87 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f1f2f6; /* Light grayish background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+/* Role Selection Section */
+.role-selection {
+    background-color: #ffffff;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 90%;
+}
+
+.role-selection h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.role-selection p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin-bottom: 40px;
+}
+
+/* Styling for Role Option (Freelancer and Company/Team) */
+.role-option {
+    display: inline-block;
+    margin: 20px;
+    width: 250px;
+    text-align: center;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.role-option:hover {
+    transform: scale(1.05); /* Zoom-in effect */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Image Styling */
+.role-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.role-img:hover {
+    transform: scale(1.1); /* Image zoom-in effect */
+}
+
+/* Title Styling */
+.role-option h3 {
+    font-size: 1.4rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: color 0.3s ease;
+}
+
+.role-option:hover h3 {
+    color: #3498db; /* Change color on hover */
+}
+
+/* Link Styling */
+a {
+    text-decoration: none;
+    color: inherit;
+}

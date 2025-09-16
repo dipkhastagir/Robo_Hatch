@@ -13,7 +13,7 @@ session_start();
     <header>
         <h2>Robo Hatch</h2>
         <div class="header-buttons">
-            <a href="register.php" class="btn">Register</a>
+            <a href="role_selection_page.php" class="btn">Register</a>
             <a href="login.php" class="btn">Sign In</a>
         </div>
     </header>

@@ -1,69 +1,41 @@
 <?php
 session_start();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Robo Hatch | Services</title>
+    <title>Services</title>
     <link rel="stylesheet" href="../css/services_page.css">
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Navbar -->
     <header>
         <h2>Robo Hatch</h2>
         <div class="header-buttons">
-            <a href="register.php" class="btn">Register</a>
+            <a href="role_selection_page.php" class="btn">Register</a>
             <a href="login.php" class="btn">Sign In</a>
         </div>
     </header>
 
     <!-- Services Section -->
-    <section class="services-container">
+    <section class="services">
         <h1>Our Services</h1>
-        <p>
-            At Robo Hatch, we provide end-to-end services for robotics development.
-            Whether you are a freelancer or a company, our platform helps you collaborate
-            and complete projects efficiently.
-        </p>
-
-        <!-- Services Grid -->
-        <div class="services-grid">
-            <div class="service-card">
-                <img src="../images/planning.png" alt="Project Planning">
-                <h2>Project Planning</h2>
-                <p>Freelancers can create research and planning documentation for robotics projects.</p>
-            </div>
-            <div class="service-card">
-                <img src="../images/cad.png" alt="3D Design & CAD">
-                <h2>3D Design & CAD</h2>
-                <p>Create detailed 3D models and CAD designs for robots and components.</p>
-            </div>
-            <div class="service-card">
-                <img src="../images/prototyping.png" alt="Hardware Prototyping">
-                <h2>Hardware Prototyping</h2>
-                <p>Companies can build prototypes using designs and research documentation.</p>
-            </div>
-            <div class="service-card">
-                <img src="../images/coding.png" alt="Software Development">
-                <h2>Software Development</h2>
-                <p>Freelancers can code software for robots, and companies can integrate it into systems.</p>
-            </div>
-            <div class="service-card">
-                <img src="../images/testing.png" alt="Testing & Debugging">
-                <h2>Testing & Debugging</h2>
-                <p>Ensure quality and performance by thorough testing and debugging.</p>
-            </div>
-            <div class="service-card">
-                <img src="../images/deployment.png" alt="Deployment & Maintenance">
-                <h2>Deployment & Maintenance</h2>
-                <p>Deploy completed robots and provide maintenance and R&D support.</p>
-            </div>
+        <div class="service-grid">
+            <div class="service-card"><img src="../images/our_services_1.png" alt="Service 1"><h3>Project Planning</h3></div>
+            <div class="service-card"><img src="../images/our_services_2.png" alt="Service 2"><h3>3D Model Designers & CAD Engineers</h3></div>
+            <div class="service-card"><img src="../images/our_services_3.png" alt="Service 3"><h3>Hardware Prototyping</h3></div>
+            <div class="service-card"><img src="../images/our_services_4.png" alt="Service 4"><h3>Software Development</h3></div>
+            <div class="service-card"><img src="../images/our_services_5.png" alt="Service 5"><h3>Testing & Validation</h3></div>
+            <div class="service-card"><img src="../images/our_services_6.png" alt="Service 6"><h3>Maintenance</h3></div>
+            <div class="service-card"><img src="../images/our_services_7.png" alt="Service 7"><h3>Research & Development</h3></div>
+            <div class="service-card"><img src="../images/our_services_8.png" alt="Service 8"><h3>Sales & Deployment</h3></div>
         </div>
 
         <!-- Next Button -->
-        <div class="next-section">
-            <a href="contact.php" class="next-btn">Next → Contact Us</a>
+        <div class="next-btn">
+            <a href="contact_page.php">Next</a>
         </div>
     </section>
 
