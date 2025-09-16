@@ -1,6 +1,7 @@
 <?php
 session_start();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +15,7 @@ session_start();
         <h2>Robo Hatch</h2>
         <div class="header-buttons">
             <a href="role_selection_page.php" class="btn">Register</a>
-            <a href="login.php" class="btn">Sign In</a>
+            <a href="sign_in_page.php" class="btn">Sign In</a>
         </div>
     </header>
 
@@ -28,7 +29,7 @@ session_start();
                 companies handle prototyping, integration, testing, deployment, maintenance, and R&D.
                 AI-driven recommendations help match the right talents with the right projects.
             </p>
-            <a href="services_page.php" class="next-btn">Next</a>
+            <a href="our_services_page.php" class="next-btn">Explore Our Services</a>
         </div>
         <div class="about-image">
             <img src="../images/about_us.jpg" alt="About Robo Hatch">

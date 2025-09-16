@@ -13,28 +13,30 @@ header {
     color: #fff;
 }
 
-header h2 {
-    margin: 0;
+header .logo {
     font-size: 1.8rem;
+    font-weight: bold;
 }
 
-.header-buttons {
+header .header-buttons {
     display: flex;
     gap: 15px;
 }
 
-.header-buttons .btn {
+header .header-buttons .btn {
     padding: 10px 18px;
     font-size: 0.95rem;
-    background: #007BFF;
-    color: #fff;
+    border-radius: 6px;
+    background: #facc15;
+    color: #222;
     text-decoration: none;
-    border-radius: 5px;
+    font-weight: bold;
     transition: 0.3s;
 }
 
-.header-buttons .btn:hover {
-    background: #0056b3;
+header .header-buttons .btn:hover {
+    background: #fff;
+    color: #222;
 }
 
 .about-container {
@@ -85,3 +87,5 @@ header h2 {
     width: 100%;
     border-radius: 10px;
 }
+
+

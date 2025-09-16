@@ -2,33 +2,58 @@
 session_start();
 include "config.php";
 
-$username = $_POST['username'];
-$password = $_POST['password'];
-$role = $_POST['role'];  // 'freelancer' or 'company'
+$error = "";
 
-if (empty($username) || empty($password)) {
-    echo "Username and password are required.";
-    exit;
-}
+// If form submitted → process login
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $role     = $_POST['role'] ?? '';
 
-$sql = "SELECT * FROM freelancers WHERE username='$username' LIMIT 1";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-
-    // Verify password
-    if (password_verify($password, $user['password'])) {
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['role'] = 'freelancer';
-        header("Location: freelancer_dashboard.php");  // Redirect to freelancer dashboard
+    if ($username === '' || $password === '' || $role === '') {
+        $error = "All fields are required.";
     } else {
-        echo "Invalid credentials.";
-    }
-} else {
-    echo "User not found.";
-}
+        if ($role === 'freelancer') {
+            $table = "freelancers";
+            $redirect = "freelancer_dashboard_page.php";
+            $identifier = "username";
+        } elseif ($role === 'company') {
+            $table = "companies";
+            $redirect = "company_dashboard_page.php";
+            $identifier = "email";
+        } elseif ($role === 'team') {
+            $table = "teams";
+            $redirect = "team_dashboard_page.php";
+            $identifier = "email";
+        } else {
+            $error = "Invalid role selected.";
+        }
 
+        if ($error === "") {
+            $stmt = $conn->prepare("SELECT * FROM $table WHERE $identifier = ? LIMIT 1");
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows === 1) {
+                $user = $result->fetch_assoc();
+                if (password_verify($password, $user['password'])) {
+                    $_SESSION['user_id']  = $user['id'];
+                    $_SESSION['role']     = $role;
+                    $_SESSION['username'] = $role === 'freelancer' ? $user['username'] : $user['email'];
+
+                    header("Location: " . $redirect);
+                    exit;
+                } else {
+                    $error = "Invalid password.";
+                }
+            } else {
+                $error = "User not found.";
+            }
+            $stmt->close();
+        }
+    }
+}
 $conn->close();
 ?>
 
@@ -39,22 +64,23 @@ $conn->close();
     <link rel="stylesheet" href="../css/sign_in_page.css">
 </head>
 <body>
-
-    <!-- Navbar -->
     <header>
         <div class="logo">Robo Hatch</div>
         <div class="header-buttons">
-            <a href="register.php" class="btn">Register</a>
+            <a href="role_selection_page.php" class="btn">Register</a>
         </div>
     </header>
 
-    <!-- Sign In Form -->
     <section class="signin-container">
         <div class="signin-box">
             <h1>Sign In</h1>
-            <form method="post" action="sign_in_process.php">
-                
-                <label for="username">Username</label>
+
+            <?php if (!empty($error)) { ?>
+                <p style="color:red; font-weight:600;"><?php echo htmlspecialchars($error); ?></p>
+            <?php } ?>
+
+            <form method="post" action="">
+                <label for="username">Username / Email</label>
                 <input type="text" id="username" name="username" required>
 
                 <label for="password">Password</label>
@@ -69,13 +95,11 @@ $conn->close();
                 </select>
 
                 <button type="submit" class="signin-btn">Sign In</button>
-
                 <p class="redirect">
                     Don’t have an account? <a href="role_selection_page.php">Register here</a>
                 </p>
             </form>
         </div>
     </section>
-
 </body>
 </html>

@@ -6,7 +6,7 @@ session_start();
 <html>
 <head>
     <title>Services</title>
-    <link rel="stylesheet" href="../css/services_page.css">
+    <link rel="stylesheet" href="../css/our_services_page.css">
 </head>
 <body>
 
@@ -15,7 +15,7 @@ session_start();
         <h2>Robo Hatch</h2>
         <div class="header-buttons">
             <a href="role_selection_page.php" class="btn">Register</a>
-            <a href="login.php" class="btn">Sign In</a>
+            <a href="sign_in_page.php" class="btn">Sign In</a>
         </div>
     </header>
 

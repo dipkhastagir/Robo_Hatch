@@ -1,14 +1,7 @@
-/* General Reset */
-* {
+body, html {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body {
     font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    color: #333;
 }
 
 header {
@@ -20,31 +13,39 @@ header {
     color: #fff;
 }
 
-header h2 {
-    margin: 0;
+header .logo {
     font-size: 1.8rem;
+    font-weight: bold;
 }
 
-.header-buttons {
+header .header-buttons {
     display: flex;
     gap: 15px;
 }
 
-.header-buttons .btn {
+header .header-buttons .btn {
     padding: 10px 18px;
     font-size: 0.95rem;
-    background: #007BFF;
-    color: #fff;
+    border-radius: 6px;
+    background: #facc15;
+    color: #222;
     text-decoration: none;
-    border-radius: 5px;
+    font-weight: bold;
     transition: 0.3s;
 }
 
-.header-buttons .btn:hover {
-    background: #0056b3;
+header .header-buttons .btn:hover {
+    background: #fff;
+    color: #222;
 }
 
-/* Services Section */
+
+
+
+
+
+
+
 .services {
     padding: 80px 40px;
     text-align: center;
@@ -56,7 +57,7 @@ header h2 {
     color: #1e3a8a;
 }
 
-/* Grid layout */
+
 .service-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr); 
@@ -65,7 +66,7 @@ header h2 {
     flex-wrap: wrap;
 }
 
-/* Individual card */
+
 .service-card {
     background: #fff;
     border-radius: 15px;
@@ -96,7 +97,14 @@ header h2 {
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* Next Button */
+
+
+
+
+
+
+
+
 .next-btn {
     margin-top: 60px;
     text-align: center;

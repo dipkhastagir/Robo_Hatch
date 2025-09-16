@@ -1,100 +1,147 @@
 <?php
-// Include the database connection file
+// Include database connection
 include "config.php"; 
 
-// Table creation query (make sure the table is created if it does not exist)
+// ------------------ Ensure Table Exists ------------------
 $tableSql = "
 CREATE TABLE IF NOT EXISTS freelancers (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    skills TEXT NOT NULL,
-    hourly_rate DECIMAL(10, 2) NOT NULL,
+    hourly_rate DECIMAL(10,2) NOT NULL,
     portfolio TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ";
 
-// Execute the query to create the freelancers table
 if ($conn->query($tableSql) !== TRUE) {
-    die('Error creating table: ' . $conn->error);  // If there's an error creating the table
+    die("Error creating table: " . $conn->error);
 }
 
-// Initialize success and error variables
-$success = $error = "";
+// ------------------ Ensure 'phone' column exists ------------------
+$columnsToAdd = [
+    "phone" => "VARCHAR(20) NOT NULL AFTER email",
+    "freelancer_type" => "VARCHAR(50) NOT NULL AFTER phone"
+];
 
-// Handle form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $email = $_POST['email'];
-    $skills = $_POST['skills'];
-    $hourly_rate = $_POST['hourly_rate'];
-    $portfolio = $_POST['portfolio'];
-
-    // Basic form validation
-    if (empty($username) || empty($password) || empty($email) || empty($skills) || empty($hourly_rate) || empty($portfolio)) {
-        $error = "All fields are required.";
-    } else {
-        // Hash the password before storing it
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-        // SQL to insert data into freelancers table
-        $sql = "INSERT INTO freelancers (username, password, email, skills, hourly_rate, portfolio) 
-                VALUES ('$username', '$hashed_password', '$email', '$skills', '$hourly_rate', '$portfolio')";
-
-        // Execute the query
-        if ($conn->query($sql) === TRUE) {
-            $success = "Registration successful! You can now log in.";
-            echo "<script>alert('Registration successful!'); window.location.href = 'login.php';</script>";  // Alert the user and redirect to login page
-        } else {
-            $error = "Error: " . $conn->error;
+foreach ($columnsToAdd as $column => $definition) {
+    $columnCheck = "SHOW COLUMNS FROM freelancers LIKE '$column'";
+    $result = $conn->query($columnCheck);
+    if ($result->num_rows == 0) {
+        $alterSql = "ALTER TABLE freelancers ADD COLUMN $column $definition";
+        if ($conn->query($alterSql) !== TRUE) {
+            die("Error adding column '$column': " . $conn->error);
         }
     }
 }
 
-// Close the connection
+// ------------------ Handle Form Submission ------------------
+$success = $error = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username        = trim($_POST['username']);
+    $password        = $_POST['password'];
+    $email           = trim($_POST['email']);
+    $phone           = trim($_POST['phone']);
+    $freelancer_type = $_POST['freelancer_type'];
+    $hourly_rate     = trim($_POST['hourly_rate']);
+    $portfolio       = trim($_POST['portfolio']);
+
+    // Validation
+    if (empty($username) || empty($password) || empty($email) || empty($phone) || empty($freelancer_type) || empty($hourly_rate) || empty($portfolio)) {
+        $error = "All fields are required.";
+    } elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strpos($email, '@') === false || strpos($email, '.') === false) {
+        $error = "Email must be valid and contain '@' and '.'";
+    } else {
+        // Check username existence
+        $check = $conn->prepare("SELECT id FROM freelancers WHERE username = ?");
+        $check->bind_param("s", $username);
+        $check->execute();
+        $check->store_result();
+
+        if ($check->num_rows > 0) {
+            $error = "Username already registered. Use another username.";
+        } else {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("INSERT INTO freelancers (username, password, email, phone, freelancer_type, hourly_rate, portfolio) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssds", $username, $hashed_password, $email, $phone, $freelancer_type, $hourly_rate, $portfolio);
+
+            if ($stmt->execute()) {
+                echo "<script>alert('Registration successful! You can now log in.'); window.location.href = 'sign_in_page.php';</script>";
+                $stmt->close();
+                $conn->close();
+                exit;
+            } else {
+                $error = "Error: " . htmlspecialchars($stmt->error);
+            }
+        }
+        $check->close();
+    }
+}
+
 $conn->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Freelancer Registration - Robo Hatch</title>
     <link rel="stylesheet" href="../css/freelancer_register_page.css">
 </head>
 <body>
-
     <div class="container">
         <h1>Freelancer Registration</h1>
 
         <form action="freelancer_register_page.php" method="POST">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" required>
+            </div>
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" placeholder="At least 8 characters" required>
+            </div>
 
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" required>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" placeholder="example@mail.com" required>
+            </div>
 
-            <label for="skills">Skills:</label>
-            <input type="text" name="skills" id="skills" required>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="text" name="phone" id="phone" placeholder="+1234567890" required>
+            </div>
 
-            <label for="hourly_rate">Hourly Rate:</label>
-            <input type="number" name="hourly_rate" id="hourly_rate" required>
+            <div class="form-group">
+                <label for="freelancer_type">Freelancer Type:</label>
+                <select id="freelancer_type" name="freelancer_type" required>
+                    <option value="">-- Choose Type --</option>
+                    <option value="planner">Project Planners and Researchers</option>
+                    <option value="designer">3D Model Designers & CAD Engineers</option>
+                    <option value="coding">Software Development</option>
+                </select>
+            </div>
 
-            <label for="portfolio">Portfolio Link:</label>
-            <textarea name="portfolio" id="portfolio" required></textarea>
+            <div class="form-group">
+                <label for="hourly_rate">Hourly Rate:</label>
+                <input type="number" name="hourly_rate" id="hourly_rate" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="portfolio">Portfolio Link:</label>
+                <textarea name="portfolio" id="portfolio" required></textarea>
+            </div>
 
             <input type="submit" value="Register" class="btn">
         </form>
 
-        <!-- Display success or error message -->
-        <?php if (!empty($success)) { echo "<p style='color:green;'>$success</p>"; } ?>
-        <?php if (!empty($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
+        <?php if (!empty($success)) echo "<p class='success'>$success</p>"; ?>
+        <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
     </div>
-
 </body>
 </html>

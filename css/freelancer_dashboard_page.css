@@ -1,94 +1,59 @@
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    background: #f5f7fa;
-    color: #333;
+    background: #f4f6f9;
 }
 
-/* Navbar */
-#navbar {
-    background: #111;
-    padding: 15px 0;
-}
-#navbar .container {
-    width: 90%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-#navbar .logo {
-    color: #fff;
-    font-size: 22px;
-    font-weight: bold;
-}
-#navbar .nav-links {
-    list-style: none;
-    display: flex;
-}
-#navbar .nav-links li {
-    margin-left: 20px;
-}
-#navbar .nav-links a {
-    text-decoration: none;
-    color: #fff;
-    transition: color 0.3s ease;
-}
-#navbar .nav-links a:hover {
-    color: #00c6ff;
-}
-
-/* Dashboard */
 .dashboard {
-    padding: 50px 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: #2a3d66;
+    color: #fff;
+    padding: 20px;
+}
+
+.sidebar h2 {
     text-align: center;
-}
-.dashboard h1 {
-    font-size: 28px;
-    margin-bottom: 10px;
-}
-.dashboard p {
     margin-bottom: 30px;
-    color: #666;
 }
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 25px;
-    margin-top: 20px;
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
 }
-.dash-card {
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: #3b4f7a;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 30px;
     background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 0 12px 12px 0;
+    box-shadow: -4px 0 12px rgba(0,0,0,0.05);
 }
-.dash-card h3 {
-    margin-bottom: 10px;
-    font-size: 18px;
-    color: #111;
-}
-.dash-card p {
-    font-size: 14px;
-    color: #555;
-}
-.dash-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-.logout {
-    background: #ff4d4d;
-    color: #fff;
-}
-.logout h3, .logout p {
-    color: #fff;
-}
-.logout:hover {
-    background: #e60000;
+
+.main-content h1 {
+    margin-bottom: 20px;
+    color: #2a3d66;
 }

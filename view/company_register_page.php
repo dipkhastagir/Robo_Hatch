@@ -1,9 +1,8 @@
 <?php
 // company_register_page.php
-// Database connection (adjust path if needed)
 include "config.php";
 
-// Create companies table if not exists
+// Ensure the companies table exists with all required columns
 $tableSql = "
 CREATE TABLE IF NOT EXISTS companies (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -18,13 +17,33 @@ CREATE TABLE IF NOT EXISTS companies (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ";
 
-if ($conn->query($tableSql) !== TRUE) {
-    die('Error creating table: ' . $conn->error);
+$conn->query($tableSql);
+
+// Check and add missing columns (safeguard for older tables)
+$columns = $conn->query("SHOW COLUMNS FROM companies");
+$existing_cols = [];
+while ($row = $columns->fetch_assoc()) {
+    $existing_cols[] = $row['Field'];
 }
 
+// Add missing columns if necessary
+if (!in_array('company_type', $existing_cols)) {
+    $conn->query("ALTER TABLE companies ADD COLUMN company_type VARCHAR(80) NOT NULL AFTER password");
+}
+if (!in_array('verification_document', $existing_cols)) {
+    $conn->query("ALTER TABLE companies ADD COLUMN verification_document TEXT NOT NULL AFTER company_type");
+}
+if (!in_array('country', $existing_cols)) {
+    $conn->query("ALTER TABLE companies ADD COLUMN country VARCHAR(100) NOT NULL AFTER verification_document");
+}
+if (!in_array('additional_info', $existing_cols)) {
+    $conn->query("ALTER TABLE companies ADD COLUMN additional_info TEXT DEFAULT NULL AFTER country");
+}
+
+// Initialize
 $success = $error = "";
 
-// Allowed company types for validation
+// Allowed company types
 $allowed_types = [
     'Hardware Prototyping',
     'Coding Integration',
@@ -46,11 +65,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $country = clean($_POST['country'] ?? '');
     $additional_info = clean($_POST['additional_info'] ?? '');
 
-    // Basic validation
+    // Validation
     if ($company_name === '' || $email === '' || $password === '' || $company_type === '' || $verification_document === '' || $country === '') {
         $error = "Please fill in all required fields.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Please provide a valid email address.";
+    } elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strpos($email, '@') === false || strpos($email, '.') === false) {
+        $error = "Please enter a valid email address containing '@' and '.'";
     } elseif (!in_array($company_type, $allowed_types, true)) {
         $error = "Invalid company type selected.";
     } else {
@@ -64,39 +85,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $check->close();
         } else {
             $check->close();
-            // Hash password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Insert record
             $stmt = $conn->prepare("
                 INSERT INTO companies (company_name, email, password, company_type, verification_document, country, additional_info)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
+            $stmt->bind_param(
+                "sssssss",
+                $company_name,
+                $email,
+                $hashed_password,
+                $company_type,
+                $verification_document,
+                $country,
+                $additional_info
+            );
 
-            if ($stmt === false) {
-                $error = "Database error: " . htmlspecialchars($conn->error);
+            if ($stmt->execute()) {
+                $success = "Company registration successful! You can now log in.";
+                echo "<script>alert('Company registration successful!'); window.location.href = 'login.php';</script>";
+                $stmt->close();
+                $conn->close();
+                exit;
             } else {
-                $stmt->bind_param(
-                    "sssssss",
-                    $company_name,
-                    $email,
-                    $hashed_password,
-                    $company_type,
-                    $verification_document,
-                    $country,
-                    $additional_info
-                );
-
-                if ($stmt->execute()) {
-                    $success = "Company registration successful! You can now log in.";
-                    echo "<script>alert('Company registration successful!'); window.location.href = 'login.php';</script>";
-                    $stmt->close();
-                    $conn->close();
-                    exit;
-                } else {
-                    $error = "Error: " . htmlspecialchars($stmt->error);
-                    $stmt->close();
-                }
+                $error = "Database error: " . htmlspecialchars($stmt->error);
+                $stmt->close();
             }
         }
     }
@@ -105,9 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
     <title>Company Registration - Robo Hatch</title>
     <link rel="stylesheet" href="../css/company_register_page.css">
 </head>
@@ -140,8 +153,8 @@ $conn->close();
                 <option>Business</option>
             </select>
 
-            <label for="verification_document">Verification Document (link / description)</label>
-            <textarea id="verification_document" name="verification_document" required placeholder="e.g., official registration link, institutional email proof, scanned doc link, GitHub/org links"></textarea>
+            <label for="verification_document">Verification Document</label>
+            <textarea id="verification_document" name="verification_document" required placeholder="e.g., official registration link, scanned doc, GitHub/org links"></textarea>
 
             <label for="country">Country</label>
             <input type="text" id="country" name="country" required>
@@ -155,7 +168,6 @@ $conn->close();
         <?php if (!empty($success)) { ?>
             <p class="success"><?= htmlspecialchars($success) ?></p>
         <?php } ?>
-
         <?php if (!empty($error)) { ?>
             <p class="error"><?= htmlspecialchars($error) ?></p>
         <?php } ?>

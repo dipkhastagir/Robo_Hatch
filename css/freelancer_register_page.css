@@ -1,55 +1,69 @@
-/* General Reset */
+/* ---------------- General Reset ---------------- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Body */
+/* ---------------- Body ---------------- */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* same as Team/Company pages */
     background-color: #f4f7fb;
     color: #333;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 20px;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
 }
 
-/* Container */
+/* ---------------- Container ---------------- */
 .container {
-    background-color: white;
+    background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 40px;
-    width: 500px; /* Fixed width */
+    width: 500px;
+    max-width: 100%;
+    margin: 60px 0; /* top & bottom spacing */
 }
 
-/* Heading */
+/* ---------------- Heading ---------------- */
 h1 {
-    font-size: 24px;
+    font-size: 28px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     color: #1e3a8a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* same font */
 }
 
-/* Form Fields */
-form label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
+/* ---------------- Form ---------------- */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    width: 160px;  /* wider for labels */
+    font-weight: 600;
     color: #333;
 }
 
-form input,
-form textarea {
-    width: 100%;
+.form-group input,
+.form-group textarea,
+.form-group select {
+    flex: 1;
     padding: 12px;
-    margin-bottom: 15px;
+    font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 form textarea {
@@ -58,34 +72,48 @@ form textarea {
 }
 
 form input[type="number"] {
-    appearance: none; /* Removes spin buttons */
+    appearance: none;
 }
 
+form input:focus,
+form textarea:focus,
+form select:focus {
+    outline: none;
+    border-color: #1e3a8a;
+    box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
+}
+
+/* ---------------- Submit Button ---------------- */
 form input[type="submit"] {
+    margin-left: 160px; /* align with input fields */
     background-color: #1e3a8a;
-    color: white;
-    padding: 12px 25px;
+    color: #fff;
+    padding: 12px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    border-radius: 6px;
     font-size: 16px;
+    cursor: pointer;
     transition: background-color 0.3s;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 form input[type="submit"]:hover {
     background-color: #2563eb;
 }
 
-/* Success and Error Messages */
-p {
-    text-align: center;
-    font-size: 16px;
-}
-
+/* ---------------- Messages ---------------- */
 p.success {
     color: green;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 p.error {
     color: red;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

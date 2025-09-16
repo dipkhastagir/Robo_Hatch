@@ -1,13 +1,11 @@
-/* team_register_page.css - fixed width layout */
-
 /* Reset */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 /* Body */
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, Arial, sans-serif;
-    background: linear-gradient(180deg, #f7fafc 0%, #eef2ff 100%);
-    color: #0f172a;
+    background: linear-gradient(180deg, #eef2ff 0%, #f3f7ff 100%);
+    color: #1f2937;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,68 +15,58 @@ body {
 
 /* Container */
 .container {
-    background: #fff;
-    width: 560px; /* fixed width */
-    padding: 36px;
+    background: #ffffff;
+    width: 560px;
+    padding: 40px;
+    margin: 80px 0; /* top & bottom spacing */
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(17,24,39,0.06);
+    box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
     border: 1px solid rgba(99,102,241,0.06);
 }
 
-/* Header */
-.card-header { text-align: center; margin-bottom: 18px; }
-h1 { font-size: 22px; color: #0f172a; margin-bottom: 6px; }
-.subtitle { font-size: 13px; color: #6b7280; }
+/* Heading */
+h1 { text-align: center; margin-bottom: 20px; font-size: 22px; color: #0f172a; }
 
-/* Labels */
-form label { display:block; margin-top:12px; margin-bottom:6px; font-weight:600; color:#374151; font-size:13px; }
-
-/* Inputs & textarea */
-form input[type="text"],
-form input[type="email"],
-form input[type="password"],
-form textarea {
-    width:100%;
-    padding:12px 14px;
-    margin-bottom:6px;
-    border:1px solid #e6e9f2;
-    border-radius:8px;
-    font-size:14px;
-    color:#0f172a;
-    background:#fbfdff;
-    transition: border-color .12s ease, box-shadow .12s ease;
+/* Form group */
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #374151; }
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e6e9f2;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fbfdff;
+    color: #0f172a;
 }
-
-form textarea { height:110px; resize:vertical; }
+.form-group textarea { height: 100px; resize: vertical; }
 
 /* Focus */
-form input:focus,
-form textarea:focus {
-    border-color:#6366f1;
-    outline:none;
-    box-shadow: 0 0 0 4px rgba(99,102,241,0.06);
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.06);
 }
 
 /* Button */
 .btn {
-    margin-top:14px;
-    width:100%;
-    padding:12px 14px;
-    background: linear-gradient(90deg,#6366f1 0%,#4f46e5 100%);
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow: 0 6px 18px rgba(79,70,229,0.14);
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg,#1e3a8a 0%, #2563eb 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.12);
 }
 .btn:hover { transform: translateY(-2px); }
 
 /* Messages */
-p { text-align:center; font-size:15px; margin-top:12px; }
-p.success { color:#16a34a; }
-p.error { color:#dc2626; }
-
-/* Help */
-small.help { display:block; font-size:12px; color:#6b7280; margin-top:6px; }
+p { text-align: center; font-size: 15px; margin-top: 12px; }
+p.success { color: #16a34a; }
+p.error { color: #dc2626; }

@@ -1,154 +1,121 @@
 <?php
-// team_register_page.php
+// Include database connection
 include "config.php";
 
-// Create teams table if not exists
+// ---------------- CREATE TABLE IF NOT EXISTS ----------------
 $tableSql = "
 CREATE TABLE IF NOT EXISTS teams (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     team_name VARCHAR(150) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(20) NOT NULL,
     country VARCHAR(100) NOT NULL,
-    project_focus VARCHAR(255) DEFAULT NULL,
-    members_info TEXT NOT NULL,
-    member_count INT(4) NOT NULL,
-    verification_document TEXT DEFAULT NULL,
+    team_members TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ";
 
 if ($conn->query($tableSql) !== TRUE) {
-    die('Error creating table: ' . $conn->error);
+    die("Error creating table: " . $conn->error);
 }
 
+// ---------------- HANDLE FORM SUBMISSION ----------------
 $success = $error = "";
 
-function clean($v) { return trim($v); }
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $team_name    = trim($_POST['team_name']);
+    $password     = $_POST['password'];
+    $email        = trim($_POST['email']);
+    $phone        = trim($_POST['phone']);
+    $country      = trim($_POST['country']);
+    $team_members = trim($_POST['team_members']);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $team_name = clean($_POST['team_name'] ?? '');
-    $email = clean($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $country = clean($_POST['country'] ?? '');
-    $project_focus = clean($_POST['project_focus'] ?? '');
-    $members_info = trim($_POST['members_info'] ?? '');
-    $verification_document = clean($_POST['verification_document'] ?? '');
-
-    // Count non-empty lines in members_info
-    $lines = preg_split("/\r\n|\n|\r/", $members_info);
-    $member_lines = array_filter(array_map('trim', $lines), function($l) { return $l !== ''; });
-    $member_count = count($member_lines);
-
-    // Validate required and format
-    if ($team_name === '' || $email === '' || $password === '' || $country === '' || $members_info === '') {
-        $error = "Team name, email, password, country and members details are required.";
+    // Validation
+    if (empty($team_name) || empty($password) || empty($email) || empty($phone) || empty($country) || empty($team_members)) {
+        $error = "Please fill in all required fields.";
+    } elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Please provide a valid email address.";
-    } elseif ($member_count < 10) {
-        $error = "A team must have at least 10 members. Detected {$member_count} member(s). Please list at least 10 members (one per line).";
+        $error = "Email must be valid.";
     } else {
-        // Check email uniqueness
+        // Check if email already exists
         $check = $conn->prepare("SELECT id FROM teams WHERE email = ?");
         $check->bind_param("s", $email);
         $check->execute();
         $check->store_result();
-        if ($check->num_rows > 0) {
-            $error = "Email already registered for another team. Use another email or log in.";
-            $check->close();
-        } else {
-            $check->close();
 
-            // Hash password
+        if ($check->num_rows > 0) {
+            $error = "Email already registered. Use another email or log in.";
+        } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Insert team
-            $stmt = $conn->prepare("
-                INSERT INTO teams (team_name, email, password, country, project_focus, members_info, member_count, verification_document)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ");
+            $stmt = $conn->prepare("INSERT INTO teams (team_name, password, email, phone, country, team_members) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssss", $team_name, $hashed_password, $email, $phone, $country, $team_members);
 
-            if ($stmt === false) {
-                $error = "Database error: " . htmlspecialchars($conn->error);
+            if ($stmt->execute()) {
+                echo "<script>alert('Registration successful! You can now log in.'); window.location.href = 'sign_in_page.php';</script>";
+                $stmt->close();
+                $conn->close();
+                exit;
             } else {
-                $stmt->bind_param(
-                    "ssssssis",
-                    $team_name,
-                    $email,
-                    $hashed_password,
-                    $country,
-                    $project_focus,
-                    $members_info,
-                    $member_count,
-                    $verification_document
-                );
-
-                if ($stmt->execute()) {
-                    $success = "Team registration successful! You can now log in.";
-                    echo "<script>alert('Team registration successful!'); window.location.href = 'login.php';</script>";
-                    $stmt->close();
-                    $conn->close();
-                    exit;
-                } else {
-                    $error = "Error: " . htmlspecialchars($stmt->error);
-                    $stmt->close();
-                }
+                $error = "Error: " . htmlspecialchars($stmt->error);
+                $stmt->close();
             }
         }
+        $check->close();
     }
 }
 
 $conn->close();
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
     <title>Team Registration - Robo Hatch</title>
     <link rel="stylesheet" href="../css/team_register_page.css">
 </head>
 <body>
-    <div class="container">
-        <header class="card-header">
-            <h1>Team Registration</h1>
-            <p class="subtitle">Teams must list at least <strong>10 members</strong> (one per line: Name — Field — Short skill/note).</p>
-        </header>
+<div class="container">
+    <h1>Team Registration</h1>
 
-        <form action="team_register_page.php" method="POST" autocomplete="off">
-            <label for="team_name">Team Name</label>
-            <input type="text" id="team_name" name="team_name" required>
+    <form action="team_register_page.php" method="POST">
+        <div class="form-group">
+            <label for="team_name">Team Name:</label>
+            <input type="text" name="team_name" id="team_name" required>
+        </div>
 
-            <label for="email">Contact Email</label>
-            <input type="email" id="email" name="email" required>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+        </div>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+        </div>
 
-            <label for="country">Country</label>
-            <input type="text" id="country" name="country" required>
+        <div class="form-group">
+            <label for="phone">Phone:</label>
+            <input type="text" name="phone" id="phone" required>
+        </div>
 
-            <label for="project_focus">Project Focus / Specialization (optional)</label>
-            <input type="text" id="project_focus" name="project_focus" placeholder="e.g., ROS, autonomous navigation">
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <input type="text" name="country" id="country" required>
+        </div>
 
-            <label for="members_info">Members (one per line)</label>
-            <textarea id="members_info" name="members_info" placeholder="John Doe — Mechatronics — SLAM research
-Jane Smith — CS — ROS modules
-..." required></textarea>
-            <small class="help">List each member on its own line: <em>Name — Field — Short note</em></small>
+        <div class="form-group">
+            <label for="team_members">Team Members:</label>
+            <textarea name="team_members" id="team_members" placeholder="John Doe - Role&#10;Jane Smith - Role" required></textarea>
+        </div>
 
-            <label for="verification_document">Verification Document (link/description)</label>
-            <textarea id="verification_document" name="verification_document" placeholder="Provide proof: institutional email, repo links, public project pages, etc."></textarea>
+        <input type="submit" value="Register" class="btn">
+    </form>
 
-            <input type="submit" value="Register Team" class="btn">
-        </form>
-
-        <?php if (!empty($success)) { ?>
-            <p class="success"><?= htmlspecialchars($success) ?></p>
-        <?php } ?>
-
-        <?php if (!empty($error)) { ?>
-            <p class="error"><?= htmlspecialchars($error) ?></p>
-        <?php } ?>
-    </div>
+    <?php if (!empty($success)) echo "<p class='success'>$success</p>"; ?>
+    <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
+</div>
 </body>
 </html>
