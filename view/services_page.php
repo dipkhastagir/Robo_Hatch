@@ -35,7 +35,7 @@ session_start();
 
         <!-- Next Button -->
         <div class="next-btn">
-            <a href="contact_page.php">Next</a>
+            <a href="contact_us_page.php">Next</a>
         </div>
     </section>
 
