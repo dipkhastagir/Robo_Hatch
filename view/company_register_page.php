@@ -1,60 +1,27 @@
 <?php
-// company_register_page.php
 include "config.php";
 
-// Ensure the companies table exists with all required columns
-$tableSql = "
-CREATE TABLE IF NOT EXISTS companies (
-    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    company_name VARCHAR(150) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    company_type VARCHAR(80) NOT NULL,
-    verification_document TEXT NOT NULL,
-    country VARCHAR(100) NOT NULL,
-    additional_info TEXT DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-";
+// Ensure table
+$conn->query("
+    CREATE TABLE IF NOT EXISTS companies (
+        id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        company_name VARCHAR(150) NOT NULL,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        company_type VARCHAR(80) NOT NULL,
+        verification_document TEXT NOT NULL,
+        country VARCHAR(100) NOT NULL,
+        additional_info TEXT DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+");
 
-$conn->query($tableSql);
-
-// Check and add missing columns (safeguard for older tables)
-$columns = $conn->query("SHOW COLUMNS FROM companies");
-$existing_cols = [];
-while ($row = $columns->fetch_assoc()) {
-    $existing_cols[] = $row['Field'];
-}
-
-// Add missing columns if necessary
-if (!in_array('company_type', $existing_cols)) {
-    $conn->query("ALTER TABLE companies ADD COLUMN company_type VARCHAR(80) NOT NULL AFTER password");
-}
-if (!in_array('verification_document', $existing_cols)) {
-    $conn->query("ALTER TABLE companies ADD COLUMN verification_document TEXT NOT NULL AFTER company_type");
-}
-if (!in_array('country', $existing_cols)) {
-    $conn->query("ALTER TABLE companies ADD COLUMN country VARCHAR(100) NOT NULL AFTER verification_document");
-}
-if (!in_array('additional_info', $existing_cols)) {
-    $conn->query("ALTER TABLE companies ADD COLUMN additional_info TEXT DEFAULT NULL AFTER country");
-}
-
-// Initialize
 $success = $error = "";
-
-// Allowed company types
 $allowed_types = [
-    'Hardware Prototyping',
-    'Coding Integration',
-    'Testing & Debugging',
-    'Deployment',
-    'Maintenance',
-    'Research & Development',
-    'Business'
+    'Hardware Prototyping','Coding Integration','Testing & Debugging',
+    'Deployment','Maintenance','Research & Development','Business'
 ];
-
-function clean($v) { return trim($v); }
+function clean($v){ return trim($v); }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $company_name = clean($_POST['company_name'] ?? '');
@@ -65,46 +32,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $country = clean($_POST['country'] ?? '');
     $additional_info = clean($_POST['additional_info'] ?? '');
 
-    // Validation
     if ($company_name === '' || $email === '' || $password === '' || $company_type === '' || $verification_document === '' || $country === '') {
         $error = "Please fill in all required fields.";
     } elseif (strlen($password) < 8) {
         $error = "Password must be at least 8 characters long.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strpos($email, '@') === false || strpos($email, '.') === false) {
-        $error = "Please enter a valid email address containing '@' and '.'";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Please enter a valid email.";
     } elseif (!in_array($company_type, $allowed_types, true)) {
         $error = "Invalid company type selected.";
     } else {
-        // Check email uniqueness
         $check = $conn->prepare("SELECT id FROM companies WHERE email = ?");
         $check->bind_param("s", $email);
         $check->execute();
         $check->store_result();
+
         if ($check->num_rows > 0) {
             $error = "Email already registered. Use another email or log in.";
-            $check->close();
         } else {
-            $check->close();
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             $stmt = $conn->prepare("
                 INSERT INTO companies (company_name, email, password, company_type, verification_document, country, additional_info)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
-            $stmt->bind_param(
-                "sssssss",
-                $company_name,
-                $email,
-                $hashed_password,
-                $company_type,
-                $verification_document,
-                $country,
-                $additional_info
-            );
+            $stmt->bind_param("sssssss", $company_name, $email, $hashed_password, $company_type, $verification_document, $country, $additional_info);
 
             if ($stmt->execute()) {
-                $success = "Company registration successful! You can now log in.";
-                echo "<script>alert('Company registration successful!'); window.location.href = 'login.php';</script>";
+                echo "<script>alert('Company registration successful! You can now log in.'); window.location.href = 'sign_in_page.php';</script>";
                 $stmt->close();
                 $conn->close();
                 exit;
@@ -113,9 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->close();
             }
         }
+        $check->close();
     }
 }
-
 $conn->close();
 ?>
 <!DOCTYPE html>
@@ -165,12 +119,8 @@ $conn->close();
             <input type="submit" value="Register Company" class="btn">
         </form>
 
-        <?php if (!empty($success)) { ?>
-            <p class="success"><?= htmlspecialchars($success) ?></p>
-        <?php } ?>
-        <?php if (!empty($error)) { ?>
-            <p class="error"><?= htmlspecialchars($error) ?></p>
-        <?php } ?>
+        <?php if (!empty($success)) { ?><p class="success"><?= htmlspecialchars($success) ?></p><?php } ?>
+        <?php if (!empty($error)) { ?><p class="error"><?= htmlspecialchars($error) ?></p><?php } ?>
     </div>
 </body>
 </html>

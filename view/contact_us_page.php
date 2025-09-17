@@ -1,6 +1,8 @@
 <?php
 session_start();
 ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +35,6 @@ session_start();
                 feel free to reach out to us. Together, let’s build the future of robotics.
             </p>
 
-            <!-- Company Information -->
             <div class="company-info">
                 <p><strong>📞 Phone:</strong> +880 1234-567890</p>
                 <p><strong>📧 Email:</strong> contact@robohatch.com</p>
@@ -41,7 +42,6 @@ session_start();
                 <p><strong>⏰ Office Hours:</strong> Sun - Thu (9:00 AM - 6:00 PM)</p>
             </div>
 
-            <!-- Navigation Buttons -->
             <div class="contact-buttons">
                 <a href="about_us_page.php" class="back-btn">Back</a>
                 <a href="role_selection_page.php" class="next-btn">Next</a>

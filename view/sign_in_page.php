@@ -4,7 +4,6 @@ include "config.php";
 
 $error = "";
 
-// If form submitted → process login
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -14,33 +13,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "All fields are required.";
     } else {
         if ($role === 'freelancer') {
-            $table = "freelancers";
+            $stmt = $conn->prepare("SELECT * FROM freelancers WHERE username = ? OR email = ? LIMIT 1");
+            $stmt->bind_param("ss", $username, $username);
             $redirect = "freelancer_dashboard_page.php";
-            $identifier = "username";
         } elseif ($role === 'company') {
-            $table = "companies";
+            $stmt = $conn->prepare("SELECT * FROM companies WHERE email = ? OR company_name = ? LIMIT 1");
+            $stmt->bind_param("ss", $username, $username);
             $redirect = "company_dashboard_page.php";
-            $identifier = "email";
         } elseif ($role === 'team') {
-            $table = "teams";
+            $stmt = $conn->prepare("SELECT * FROM teams WHERE email = ? OR team_name = ? LIMIT 1");
+            $stmt->bind_param("ss", $username, $username);
             $redirect = "team_dashboard_page.php";
-            $identifier = "email";
         } else {
+            $stmt = null;
             $error = "Invalid role selected.";
         }
 
-        if ($error === "") {
-            $stmt = $conn->prepare("SELECT * FROM $table WHERE $identifier = ? LIMIT 1");
-            $stmt->bind_param("s", $username);
+        if ($stmt && $error === "") {
             $stmt->execute();
             $result = $stmt->get_result();
 
-            if ($result->num_rows === 1) {
+            if ($result && $result->num_rows === 1) {
                 $user = $result->fetch_assoc();
+
                 if (password_verify($password, $user['password'])) {
                     $_SESSION['user_id']  = $user['id'];
                     $_SESSION['role']     = $role;
-                    $_SESSION['username'] = $role === 'freelancer' ? $user['username'] : $user['email'];
+
+                    if ($role === 'freelancer') {
+                        $_SESSION['username'] = $user['username'];
+                    } elseif ($role === 'company') {
+                        $_SESSION['username']     = $user['company_name'];
+                        $_SESSION['company_name'] = $user['company_name']; // ✅ Added
+                    } else { // team
+                        $_SESSION['username'] = $user['team_name'];
+                    }
 
                     header("Location: " . $redirect);
                     exit;
@@ -56,50 +63,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $conn->close();
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sign In | Robo Hatch</title>
-    <link rel="stylesheet" href="../css/sign_in_page.css">
-</head>
-<body>
-    <header>
-        <div class="logo">Robo Hatch</div>
-        <div class="header-buttons">
-            <a href="role_selection_page.php" class="btn">Register</a>
-        </div>
-    </header>
-
-    <section class="signin-container">
-        <div class="signin-box">
-            <h1>Sign In</h1>
-
-            <?php if (!empty($error)) { ?>
-                <p style="color:red; font-weight:600;"><?php echo htmlspecialchars($error); ?></p>
-            <?php } ?>
-
-            <form method="post" action="">
-                <label for="username">Username / Email</label>
-                <input type="text" id="username" name="username" required>
-
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-
-                <label for="role">Select Role</label>
-                <select id="role" name="role" required>
-                    <option value="">-- Choose Role --</option>
-                    <option value="freelancer">Freelancer</option>
-                    <option value="company">Company</option>
-                    <option value="team">Team</option>
-                </select>
-
-                <button type="submit" class="signin-btn">Sign In</button>
-                <p class="redirect">
-                    Don’t have an account? <a href="role_selection_page.php">Register here</a>
-                </p>
-            </form>
-        </div>
-    </section>
-</body>
-</html>

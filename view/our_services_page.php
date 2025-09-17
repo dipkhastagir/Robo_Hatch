@@ -9,8 +9,6 @@ session_start();
     <link rel="stylesheet" href="../css/our_services_page.css">
 </head>
 <body>
-
-    <!-- Navbar -->
     <header>
         <h2>Robo Hatch</h2>
         <div class="header-buttons">
@@ -19,7 +17,6 @@ session_start();
         </div>
     </header>
 
-    <!-- Services Section -->
     <section class="services">
         <h1>Our Services</h1>
         <div class="service-grid">
@@ -33,7 +30,6 @@ session_start();
             <div class="service-card"><img src="../images/our_services_8.png" alt="Service 8"><h3>Sales & Deployment</h3></div>
         </div>
 
-        <!-- Next Button -->
         <div class="next-btn">
             <a href="contact_us_page.php">Next</a>
         </div>

@@ -1,0 +1,95 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+/* Body */
+body {
+    background: #f4f6fa;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;   /* 👈 aligns to top instead of exact middle */
+    padding-top: 60px;         /* 👈 space from top */
+}
+
+/* Profile Box */
+.profile-box {
+    background: #fff;
+    padding: 40px;
+    width: 700px;   /* fixed width */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Title */
+.profile-box h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #1e3a8a;
+}
+
+/* Messages */
+.msg {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+}
+.success { background: #d1fae5; color: #065f46; }
+.error   { background: #fee2e2; color: #991b1b; }
+
+/* Form */
+form {
+    display: block;
+    margin-top: 10px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #f9fafb;
+}
+
+textarea {
+    min-height: 120px;
+    resize: none;
+}
+
+/* Button */
+button {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #facc15;
+    color: #1e3a8a;
+}

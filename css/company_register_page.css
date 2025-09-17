@@ -1,21 +1,25 @@
-/* company_register_page.css - fixed width layout */
+* 
+{ 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box;
+}
 
-/* Reset */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-/* Body */
-body {
+body 
+{
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, Arial, sans-serif;
     background: linear-gradient(180deg, #eef2ff 0%, #f3f7ff 100%);
     color: #1f2937;
     display: flex;
     justify-content: center;
-    /* Remove align-items center */
-    padding: 80px 0;  /* top & bottom space */
+    padding: 80px 0;  
 }
 
-/* Container */
-.container {
+
+
+
+.container 
+{
     background: #ffffff;
     width: 560px; 
     padding: 40px;
@@ -25,20 +29,52 @@ body {
 }
 
 
-/* Header */
-.card-header { text-align:center; margin-bottom:18px; }
-h1 { font-size: 22px; color: #0f172a; margin-bottom:6px; }
-.subtitle { font-size:13px; color:#6b7280; }
 
-/* Labels */
-form label { display:block; margin-top:12px; margin-bottom:6px; font-weight:600; color:#374151; font-size:13px; }
 
-/* Inputs & selects & textarea */
+
+.card-header 
+{ 
+    text-align:center; 
+    margin-bottom:18px; 
+}
+
+h1 
+{ 
+    font-size: 22px; 
+    color: #0f172a; 
+    margin-bottom:6px; 
+}
+
+.subtitle 
+{ 
+    font-size:13px; 
+    color:#6b7280; 
+}
+
+
+form label 
+{ 
+    display:block; 
+    margin-top:12px; 
+    margin-bottom:6px; 
+    font-weight:600; 
+    color:#374151; 
+    font-size:13px; 
+}
+
+
+
+
 form input[type="text"],
+
 form input[type="email"],
+
 form input[type="password"],
+
 form textarea,
-form select {
+
+form select 
+{
     width:100%;
     padding:12px 14px;
     margin-bottom:6px;
@@ -50,21 +86,31 @@ form select {
     transition: border-color .12s ease, box-shadow .12s ease;
 }
 
-form textarea { height:100px; resize:vertical; }
+form textarea 
+{ 
+    height:100px; 
+    resize:vertical; 
+}
 
-form select { height:44px; }
+form select 
+{ 
+    height:44px; 
+}
 
-/* Focus */
 form input:focus,
+
 form textarea:focus,
-form select:focus {
+
+form select:focus 
+{
     border-color:#2563eb;
     outline:none;
     box-shadow: 0 0 0 4px rgba(37,99,235,0.06);
 }
 
-/* Button */
-.btn {
+
+.btn 
+{
     margin-top:14px;
     width:100%;
     padding:12px 14px;
@@ -77,9 +123,26 @@ form select:focus {
     cursor:pointer;
     box-shadow: 0 6px 18px rgba(37,99,235,0.12);
 }
-.btn:hover { transform: translateY(-2px); }
 
-/* Messages */
-p { text-align:center; font-size:15px; margin-top:12px; }
-p.success { color:#16a34a; }
-p.error { color:#dc2626; }
+.btn:hover 
+{ 
+    transform: translateY(-2px); 
+}
+
+
+p 
+{ 
+    text-align:center; 
+    font-size:15px; 
+    margin-top:12px; 
+}
+
+p.success 
+{ 
+    color:#16a34a; 
+}
+
+p.error 
+{ 
+    color:#dc2626; 
+}
