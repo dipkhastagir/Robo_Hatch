@@ -2,8 +2,8 @@
 session_start();
 include "config.php";
 
-// Redirect if not logged in
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'team') {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'team') 
+{
     header("Location: sign_in_page.php");
     exit;
 }
@@ -11,7 +11,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'team') {
 $user_id = $_SESSION['user_id'];
 $success = $error = "";
 
-// Fetch current team info
 $stmt = $conn->prepare("SELECT * FROM teams WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -19,35 +18,49 @@ $result = $stmt->get_result();
 $team = $result->fetch_assoc();
 $stmt->close();
 
-// Handle profile update
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") 
+{
     $email    = trim($_POST['email']);
     $phone    = trim($_POST['phone']);
     $country  = trim($_POST['country']);
     $members  = trim($_POST['team_members']);
 
-    if ($email === "" || $phone === "" || $country === "" || $members === "") {
+    if ($email === "" || $phone === "" || $country === "" || $members === "") 
+    {
         $error = "All fields are required.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } 
+    
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+    {
         $error = "Invalid email address.";
-    } else {
+    } 
+    
+    else 
+    {
         $stmt = $conn->prepare("UPDATE teams SET email = ?, phone = ?, country = ?, team_members = ? WHERE id = ?");
         $stmt->bind_param("ssssi", $email, $phone, $country, $members, $user_id);
 
-        if ($stmt->execute()) {
+        if ($stmt->execute()) 
+        {
             $success = "Profile updated successfully!";
             $team['email'] = $email;
             $team['phone'] = $phone;
             $team['country'] = $country;
             $team['team_members'] = $members;
-        } else {
+        } 
+        
+        else 
+        {
             $error = "Error updating profile: " . $stmt->error;
         }
+
         $stmt->close();
     }
 }
+
 $conn->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>

@@ -3,49 +3,58 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Container */
-.profile-container {
+
+
+
+
+
+.profile-container 
+{
     padding: 30px;
-    max-width: 900px;   /* wide container */
-    margin: 60px auto;  /* spacing from top & center */
+    max-width: 900px;  
+    margin: 60px auto;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Title */
-.profile-container h1 {
+.profile-container h1 
+{
     text-align: center;
     margin-bottom: 25px;
     color: #1e3a8a;
     font-size: 2rem;
 }
 
-/* Profile Card */
-.profile-card {
+.profile-card 
+{
     padding: 25px;
     background: #f9fafc;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
 }
 
-.profile-card p {
+.profile-card p 
+{
     font-size: 1.1rem;
     color: #333;
     margin-bottom: 15px;
     line-height: 1.6;
 }
 
-.profile-card strong {
+.profile-card strong 
+{
     color: #111827;
 }
 
-.profile-card a {
+.profile-card a 
+{
     color: #2563eb;
     text-decoration: none;
     font-weight: bold;
 }
 
-.profile-card a:hover {
+.profile-card a:hover 
+{
     text-decoration: underline;
 }

@@ -17,13 +17,16 @@ $conn->query("
 ");
 
 $success = $error = "";
+
 $allowed_types = [
     'Hardware Prototyping','Coding Integration','Testing & Debugging',
     'Deployment','Maintenance','Research & Development','Business'
 ];
+
 function clean($v){ return trim($v); }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+{
     $company_name = clean($_POST['company_name'] ?? '');
     $email = clean($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -32,23 +35,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $country = clean($_POST['country'] ?? '');
     $additional_info = clean($_POST['additional_info'] ?? '');
 
-    if ($company_name === '' || $email === '' || $password === '' || $company_type === '' || $verification_document === '' || $country === '') {
+    if ($company_name === '' || $email === '' || $password === '' || $company_type === '' || $verification_document === '' || $country === '') 
+    {
         $error = "Please fill in all required fields.";
-    } elseif (strlen($password) < 8) {
+    } 
+    
+    elseif (strlen($password) < 8) 
+    {
         $error = "Password must be at least 8 characters long.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } 
+    
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+    {
         $error = "Please enter a valid email.";
-    } elseif (!in_array($company_type, $allowed_types, true)) {
+    } 
+    
+    elseif (!in_array($company_type, $allowed_types, true)) 
+    {
         $error = "Invalid company type selected.";
-    } else {
+    } 
+    
+    else 
+    {
         $check = $conn->prepare("SELECT id FROM companies WHERE email = ?");
         $check->bind_param("s", $email);
         $check->execute();
         $check->store_result();
 
-        if ($check->num_rows > 0) {
+        if ($check->num_rows > 0) 
+        {
             $error = "Email already registered. Use another email or log in.";
-        } else {
+        } 
+        
+        else 
+        {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             $stmt = $conn->prepare("
@@ -57,21 +77,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ");
             $stmt->bind_param("sssssss", $company_name, $email, $hashed_password, $company_type, $verification_document, $country, $additional_info);
 
-            if ($stmt->execute()) {
+            if ($stmt->execute()) 
+            {
                 echo "<script>alert('Company registration successful! You can now log in.'); window.location.href = 'sign_in_page.php';</script>";
                 $stmt->close();
                 $conn->close();
                 exit;
-            } else {
+            } 
+            
+            else 
+            {
                 $error = "Database error: " . htmlspecialchars($stmt->error);
                 $stmt->close();
             }
         }
+
         $check->close();
     }
 }
+
 $conn->close();
 ?>
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -119,8 +150,17 @@ $conn->close();
             <input type="submit" value="Register Company" class="btn">
         </form>
 
-        <?php if (!empty($success)) { ?><p class="success"><?= htmlspecialchars($success) ?></p><?php } ?>
-        <?php if (!empty($error)) { ?><p class="error"><?= htmlspecialchars($error) ?></p><?php } ?>
+        <?php 
+            if (!empty($success)) 
+            { ?>
+                <p class="success"><?= htmlspecialchars($success) ?></p>
+            <?php } ?>
+        <?php 
+        
+        if (!empty($error)) 
+        { ?>
+            <p class="error"><?= htmlspecialchars($error) ?></p>
+        <?php } ?>
     </div>
 </body>
 </html>

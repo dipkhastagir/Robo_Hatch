@@ -2,7 +2,8 @@
 session_start();
 include "config.php";
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'company') {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'company') 
+{
     header("Location: sign_in_page.php");
     exit;
 }
@@ -10,10 +11,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'company') {
 $user_id = $_SESSION['user_id'];
 $success = $error = "";
 
-// ✅ Fix for undefined company_name
 $companyName = $_SESSION['company_name'] ?? ($_SESSION['username'] ?? 'Unknown Company');
 
-// Fetch current company data
 $stmt = $conn->prepare("SELECT * FROM companies WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -21,7 +20,6 @@ $result = $stmt->get_result();
 $company = $result->fetch_assoc();
 $stmt->close();
 
-// Allowed company types
 $allowed_types = [
     'Hardware Prototyping',
     'Coding Integration',
@@ -32,7 +30,6 @@ $allowed_types = [
     'Business'
 ];
 
-// Handle profile update
 if ($_SERVER["REQUEST_METHOD"] === "POST" && ($_GET['section'] ?? '') === "update") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
@@ -77,10 +74,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && ($_GET['section'] ?? '') === "updat
 $conn->close();
 ?>
 
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Company Dashboard - Robo Hatch</title>
+    <title>Company Dashboard</title>
     <link rel="stylesheet" href="../css/company_dashboard_page.css">
 </head>
 <body>
@@ -107,7 +108,8 @@ $conn->close();
         <?php 
         $section = $_GET['section'] ?? 'profile';
 
-        if ($section === 'profile') { ?>
+        if ($section === 'profile') 
+        { ?>
             <h1>🏢 Company Profile</h1>
             <div class="content-box">
                 <p><strong>Company Name:</strong> <?= htmlspecialchars($companyName) ?></p>
@@ -118,7 +120,10 @@ $conn->close();
                 <p><strong>Additional Info:</strong> <?= htmlspecialchars($company['additional_info']) ?></p>
             </div>
 
-        <?php } elseif ($section === 'update') { ?>
+        <?php } 
+        
+        elseif ($section === 'update') 
+        { ?>
             <h1>✏ Update Profile</h1>
             <div class="content-box">
                 <?php if ($success) echo "<p class='message success'>$success</p>"; ?>
@@ -137,7 +142,8 @@ $conn->close();
                     <label>Company Type</label>
                     <select name="company_type" required>
                         <option value="">Select company type</option>
-                        <?php foreach ($allowed_types as $type) { ?>
+                        <?php foreach ($allowed_types as $type) 
+                        { ?>
                             <option value="<?= $type ?>" <?= $company['company_type'] === $type ? 'selected' : '' ?>>
                                 <?= $type ?>
                             </option>
@@ -157,44 +163,61 @@ $conn->close();
                 </form>
             </div>
 
-        <?php } elseif ($section === 'projects') { ?>
+        <?php } 
+        
+        elseif ($section === 'projects') 
+        { ?>
             <h1>📂 Project Management</h1>
             <div class="content-box">
                 <button>Create New Project</button>
                 <p>No active projects yet.</p>
             </div>
 
-        <?php } elseif ($section === 'buy') { ?>
+        <?php } 
+        
+        elseif ($section === 'buy') 
+        { ?>
             <h1>🛒 Buy Ideas/Designs</h1>
             <div class="content-box">
                 <p>Search and purchase freelancer research, CAD designs, or code.</p>
             </div>
 
-        <?php } elseif ($section === 'outsourcing') { ?>
+        <?php } 
+        
+        elseif ($section === 'outsourcing') 
+        { ?>
             <h1>🤝 Outsourcing</h1>
             <div class="content-box">
                 <p>No outsourcing contracts yet.</p>
             </div>
 
-        <?php } elseif ($section === 'messages') { ?>
+        <?php } 
+        
+        elseif ($section === 'messages') 
+        { ?>
             <h1>💬 Messages</h1>
             <div class="content-box">
                 <p>No messages yet.</p>
             </div>
 
-        <?php } elseif ($section === 'expenses') { ?>
+        <?php } elseif ($section === 'expenses') 
+        { ?>
             <h1>💰 Expenses</h1>
             <div class="content-box">
                 <p>Total Spent: $0.00</p>
             </div>
 
-        <?php } elseif ($section === 'rnd') { ?>
+        <?php } 
+        
+        elseif ($section === 'rnd') 
+        { ?>
             <h1>🔬 R&D & Maintenance</h1>
             <div class="content-box">
                 <p>No active R&D tasks yet.</p>
             </div>
 
-        <?php } elseif ($section === 'settings') { ?>
+        <?php } elseif ($section === 'settings') 
+        { ?>
             <h1>⚙ Settings</h1>
             <div class="content-box">
                 <form method="post">

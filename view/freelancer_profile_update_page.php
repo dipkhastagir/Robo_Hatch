@@ -2,7 +2,8 @@
 session_start();
 include "config.php";
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'freelancer') {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'freelancer') 
+{
     header("Location: sign_in_page.php");
     exit;
 }
@@ -10,7 +11,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'freelancer') {
 $user_id = $_SESSION['user_id'];
 $success = $error = "";
 
-// Fetch user
 $stmt = $conn->prepare("SELECT * FROM freelancers WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -18,36 +18,54 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
 
-// Handle update
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") 
+{
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
     $freelancer_type = trim($_POST['freelancer_type']);
     $hourly_rate = trim($_POST['hourly_rate']);
     $portfolio = trim($_POST['portfolio']);
 
-    if ($email === "" || $phone === "" || $freelancer_type === "" || $hourly_rate === "" || $portfolio === "") {
+    if ($email === "" || $phone === "" || $freelancer_type === "" || $hourly_rate === "" || $portfolio === "") 
+    {
         $error = "All fields are required.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } 
+    
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+    {
         $error = "Invalid email address.";
-    } else {
+    } 
+    
+    else 
+    {
         $stmt = $conn->prepare("UPDATE freelancers SET email=?, phone=?, freelancer_type=?, hourly_rate=?, portfolio=? WHERE id=?");
         $stmt->bind_param("sssssi", $email, $phone, $freelancer_type, $hourly_rate, $portfolio, $user_id);
-        if ($stmt->execute()) {
+        if ($stmt->execute()) 
+        {
             $success = "Profile updated successfully!";
             $user['email'] = $email;
             $user['phone'] = $phone;
             $user['freelancer_type'] = $freelancer_type;
             $user['hourly_rate'] = $hourly_rate;
             $user['portfolio'] = $portfolio;
-        } else {
+        } 
+        
+        else 
+        {
             $error = "Error updating profile: " . $stmt->error;
         }
+
         $stmt->close();
     }
 }
+
 $conn->close();
 ?>
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>

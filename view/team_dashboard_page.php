@@ -5,9 +5,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'team')
     header("Location: sign_in_page.php");
     exit;
 }
-
-
 ?>
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +18,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'team')
 </head>
 <body>
 <div class="dashboard">
-    <!-- Sidebar -->
     <div class="sidebar">
         <h2>Team Panel</h2>
         <ul>
@@ -33,7 +34,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'team')
         </ul>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <iframe name="content" src="team_profile_summary_page.php"></iframe>
     </div>

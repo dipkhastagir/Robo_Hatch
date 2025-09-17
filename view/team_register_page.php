@@ -1,7 +1,6 @@
 <?php
 include "config.php";
 
-// Ensure table
 if (!$conn->query("
     CREATE TABLE IF NOT EXISTS teams (
         id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -13,13 +12,16 @@ if (!$conn->query("
         team_members TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-")) {
+")) 
+
+{
     die("Error creating table: " . $conn->error);
 }
 
 $success = $error = "";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") 
+{
     $team_name    = trim($_POST['team_name'] ?? '');
     $password     = $_POST['password'] ?? '';
     $email        = trim($_POST['email'] ?? '');
@@ -27,44 +29,70 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $country      = trim($_POST['country'] ?? '');
     $team_members = trim($_POST['team_members'] ?? '');
 
-    if ($team_name === '' || $password === '' || $email === '' || $phone === '' || $country === '' || $team_members === '') {
+    if ($team_name === '' || $password === '' || $email === '' || $phone === '' || $country === '' || $team_members === '') 
+    {
         $error = "Please fill in all required fields.";
-    } elseif (strlen($password) < 8) {
+    } 
+    
+    elseif (strlen($password) < 8) 
+    {
         $error = "Password must be at least 8 characters long.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } 
+    
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+    {
         $error = "Email must be valid.";
-    } else {
+    } 
+    
+    else 
+    {
         $check = $conn->prepare("SELECT id FROM teams WHERE email = ?");
         $check->bind_param("s", $email);
         $check->execute();
         $check->store_result();
 
-        if ($check->num_rows > 0) {
+        if ($check->num_rows > 0) 
+        {
             $error = "Email already registered. Use another email or log in.";
-        } else {
+        } 
+        
+        else 
+        {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             $stmt = $conn->prepare("
                 INSERT INTO teams (team_name, password, email, phone, country, team_members)
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
+
             $stmt->bind_param("ssssss", $team_name, $hashed_password, $email, $phone, $country, $team_members);
 
-            if ($stmt->execute()) {
+            if ($stmt->execute()) 
+            {
                 echo "<script>alert('Registration successful! You can now log in.'); window.location.href = 'sign_in_page.php';</script>";
                 $stmt->close();
                 $conn->close();
                 exit;
-            } else {
+            } 
+            
+            else 
+            {
                 $error = "Error: " . htmlspecialchars($stmt->error);
                 $stmt->close();
             }
         }
+
         $check->close();
     }
 }
+
 $conn->close();
 ?>
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -101,7 +129,9 @@ $conn->close();
         </div>
         <input type="submit" value="Register" class="btn">
     </form>
+
     <?php if (!empty($success)) echo "<p class='success'>$success</p>"; ?>
+    
     <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
 </div>
 </body>

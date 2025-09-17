@@ -5,6 +5,11 @@ body, html
     font-family: Arial, sans-serif;
 }
 
+
+
+
+
+
 header 
 {
     background: #222;
@@ -45,6 +50,10 @@ header .header-buttons .btn:hover
     color: #222;
 }
 
+
+
+
+
 .about-container 
 {
     display: flex;
@@ -74,6 +83,10 @@ header .header-buttons .btn:hover
     line-height: 1.6;
 }
 
+
+
+
+
 .next-btn 
 {
     display: inline-block;
@@ -89,6 +102,10 @@ header .header-buttons .btn:hover
 {
     background: #1e7e34;
 }
+
+
+
+
 
 .about-image 
 {

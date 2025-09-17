@@ -1,12 +1,12 @@
-/* Reset */
-* {
+* 
+{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Body */
-body {
+body 
+{
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #1e3a8a, #2563eb, #3b82f6);
     min-height: 100vh;
@@ -14,8 +14,8 @@ body {
     flex-direction: column;
 }
 
-/* Navbar */
-header {
+header 
+{
     background: #111827;
     padding: 15px 40px;
     display: flex;
@@ -24,18 +24,20 @@ header {
     color: #fff;
 }
 
-header .logo {
+header .logo 
+{
     font-size: 1.8rem;
     font-weight: bold;
 }
 
-/* Navbar buttons */
-.header-buttons {
+.header-buttons 
+{
     display: flex;
     gap: 12px;
 }
 
-.header-buttons .btn {
+.header-buttons .btn 
+{
     padding: 10px 20px;
     border-radius: 6px;
     background: #facc15;
@@ -46,23 +48,26 @@ header .logo {
     border: none;
 }
 
-.header-buttons .btn:hover {
+.header-buttons .btn:hover 
+{
     background: #fff;
     color: #111827;
 }
 
-.header-buttons .back-btn {
+.header-buttons .back-btn 
+{
     background: #e5e7eb;
     color: #111827;
 }
 
-.header-buttons .back-btn:hover {
+.header-buttons .back-btn:hover 
+{
     background: #d1d5db;
     color: #000;
 }
 
-/* Sign In Container */
-.signin-container {
+.signin-container 
+{
     flex: 1;
     display: flex;
     justify-content: center;
@@ -70,8 +75,8 @@ header .logo {
     padding: 50px;
 }
 
-/* Box */
-.signin-box {
+.signin-box 
+{
     background: #fff;
     padding: 40px;
     border-radius: 12px;
@@ -81,13 +86,14 @@ header .logo {
     text-align: center;
 }
 
-.signin-box h1 {
+.signin-box h1 
+{
     margin-bottom: 25px;
     color: #1e3a8a;
 }
 
-/* Labels */
-.signin-box label {
+.signin-box label 
+{
     display: block;
     text-align: left;
     margin: 12px 0 5px;
@@ -95,9 +101,10 @@ header .logo {
     color: #333;
 }
 
-/* Inputs */
 .signin-box input,
-.signin-box select {
+
+.signin-box select 
+{
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
@@ -106,8 +113,8 @@ header .logo {
     font-size: 1rem;
 }
 
-/* Submit Button */
-.signin-btn {
+.signin-btn 
+{
     width: 100%;
     padding: 12px;
     background: #1e3a8a;
@@ -119,23 +126,26 @@ header .logo {
     transition: 0.3s;
 }
 
-.signin-btn:hover {
+.signin-btn:hover 
+{
     background: #facc15;
     color: #1e3a8a;
 }
 
-/* Redirect text */
-.redirect {
+.redirect 
+{
     margin-top: 15px;
     font-size: 0.95rem;
 }
 
-.redirect a {
+.redirect a 
+{
     color: #2563eb;
     text-decoration: none;
     font-weight: bold;
 }
 
-.redirect a:hover {
+.redirect a:hover 
+{
     text-decoration: underline;
 }

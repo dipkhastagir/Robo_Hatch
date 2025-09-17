@@ -1,7 +1,6 @@
 <?php
 include "config.php";
 
-// Ensure table exists (with UNIQUE email for cleanliness)
 $conn->query("
     CREATE TABLE IF NOT EXISTS freelancers (
         id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -16,15 +15,17 @@ $conn->query("
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ");
 
-// Add missing columns if needed
 $columnsToAdd = [
     "phone" => "VARCHAR(20) NOT NULL AFTER email",
     "freelancer_type" => "VARCHAR(50) NOT NULL AFTER phone"
 ];
-foreach ($columnsToAdd as $column => $def) {
+foreach ($columnsToAdd as $column => $def) 
+{
     $res = $conn->query("SHOW COLUMNS FROM freelancers LIKE '$column'");
-    if ($res && $res->num_rows == 0) {
-        if (!$conn->query("ALTER TABLE freelancers ADD COLUMN $column $def")) {
+    if ($res && $res->num_rows == 0) 
+    {
+        if (!$conn->query("ALTER TABLE freelancers ADD COLUMN $column $def")) 
+        {
             die("Error adding column '$column': " . $conn->error);
         }
     }
@@ -32,7 +33,8 @@ foreach ($columnsToAdd as $column => $def) {
 
 $success = $error = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") 
+{
     $username        = trim($_POST['username'] ?? '');
     $password        = $_POST['password'] ?? '';
     $email           = trim($_POST['email'] ?? '');
@@ -41,50 +43,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hourly_rate     = trim($_POST['hourly_rate'] ?? '');
     $portfolio       = trim($_POST['portfolio'] ?? '');
 
-    if ($username === '' || $password === '' || $email === '' || $phone === '' || $freelancer_type === '' || $hourly_rate === '' || $portfolio === '') {
+    if ($username === '' || $password === '' || $email === '' || $phone === '' || $freelancer_type === '' || $hourly_rate === '' || $portfolio === '') 
+    {
         $error = "All fields are required.";
-    } elseif (strlen($password) < 8) {
+    } 
+    
+    elseif (strlen($password) < 8) 
+    {
         $error = "Password must be at least 8 characters long.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } 
+    
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+    {
         $error = "Email must be valid.";
-    } else {
-        // Check username OR email conflict
+    } 
+    
+    else 
+    {
         $check = $conn->prepare("SELECT id FROM freelancers WHERE username = ? OR email = ?");
         $check->bind_param("ss", $username, $email);
         $check->execute();
         $check->store_result();
 
-        if ($check->num_rows > 0) {
+        if ($check->num_rows > 0) 
+        {
             $error = "Username or Email already registered.";
-        } else {
+        } 
+        
+        else 
+        {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             $stmt = $conn->prepare("
                 INSERT INTO freelancers (username, password, email, phone, freelancer_type, hourly_rate, portfolio)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
-            // s s s s s d s
+
             $stmt->bind_param("sssssds", $username, $hashed_password, $email, $phone, $freelancer_type, $hourly_rate, $portfolio);
 
-            if ($stmt->execute()) {
+            if ($stmt->execute()) 
+            {
                 echo "<script>alert('Registration successful! You can now log in.'); window.location.href = 'sign_in_page.php';</script>";
                 $stmt->close();
                 $conn->close();
                 exit;
-            } else {
+            } 
+            
+            else 
+            {
                 $error = "Error: " . htmlspecialchars($stmt->error);
             }
+
             $stmt->close();
         }
+
         $check->close();
     }
 }
+
 $conn->close();
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Freelancer Registration - Robo Hatch</title>
     <link rel="stylesheet" href="../css/freelancer_register_page.css">
 </head>
@@ -127,7 +149,9 @@ $conn->close();
             </div>
             <input type="submit" value="Register" class="btn">
         </form>
+
         <?php if (!empty($success)) echo "<p class='success'>$success</p>"; ?>
+        
         <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
     </div>
 </body>

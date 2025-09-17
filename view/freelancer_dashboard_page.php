@@ -1,6 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) 
+{
     header("Location: sign_in_page.php");
     exit;
 }
@@ -14,7 +15,6 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
 <div class="dashboard">
-    <!-- Sidebar -->
     <div class="sidebar">
         <h2>Robo Hatch</h2>
         <ul>
@@ -30,7 +30,6 @@ if (!isset($_SESSION['user_id'])) {
         </ul>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <iframe name="content" src="freelancer_profile_update_page.php"></iframe>
     </div>

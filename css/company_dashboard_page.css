@@ -1,13 +1,13 @@
-/* Reset */
-* {
+* 
+{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Layout */
-body {
+body 
+{
     background: #f4f7fb;
     display: flex;
     justify-content: center;
@@ -15,7 +15,8 @@ body {
     min-height: 100vh;
 }
 
-.dashboard {
+.dashboard 
+{
     display: flex;
     width: 100%;
     max-width: 1200px;
@@ -27,8 +28,8 @@ body {
     overflow: hidden;
 }
 
-/* Sidebar */
-.sidebar {
+.sidebar 
+{
     width: 250px;
     background-color: #1e3a8a;
     color: #fff;
@@ -38,7 +39,8 @@ body {
     align-items: center;
 }
 
-.sidebar h2 {
+.sidebar h2 
+{
     font-size: 1.5rem;
     margin-bottom: 30px;
     text-align: center;
@@ -46,16 +48,19 @@ body {
     letter-spacing: 1px;
 }
 
-.sidebar ul {
+.sidebar ul 
+{
     list-style: none;
     width: 100%;
 }
 
-.sidebar ul li {
+.sidebar ul li 
+{
     width: 100%;
 }
 
-.sidebar ul li a {
+.sidebar ul li a 
+{
     display: block;
     padding: 12px 20px;
     color: #fff;
@@ -65,30 +70,31 @@ body {
     border-left: 4px solid transparent;
 }
 
-.sidebar ul li a:hover {
+.sidebar ul li a:hover 
+{
     background-color: #2563eb;
     border-left: 4px solid #facc15;
 }
 
-/* Main Content */
-.main-content {
+.main-content 
+{
     flex: 1;
-    padding: 40px; /* More breathing space */
+    padding: 40px; 
     background-color: #f9fafc;
     overflow-y: auto;
 }
 
-/* Section Headings */
-.main-content h1 {
-    font-size: 2rem; /* Bigger heading for clarity */
+.main-content h1 
+{
+    font-size: 2rem; 
     margin-bottom: 25px;
     color: #1e3a8a;
     border-bottom: 2px solid #e5e7eb;
     padding-bottom: 8px;
 }
 
-/* Content Box */
-.content-box {
+.content-box 
+{
     background: #fff;
     padding: 25px;
     border-radius: 12px;
@@ -96,15 +102,16 @@ body {
     margin-bottom: 25px;
 }
 
-.content-box p {
+.content-box p 
+{
     font-size: 1rem;
     color: #333;
     margin-bottom: 12px;
     line-height: 1.5;
 }
 
-/* Buttons */
-.content-box button {
+.content-box button 
+{
     padding: 12px 20px;
     background: #1e3a8a;
     color: #fff;
@@ -115,26 +122,31 @@ body {
     transition: 0.3s;
 }
 
-.content-box button:hover {
+.content-box button:hover 
+{
     background: #facc15;
     color: #1e3a8a;
 }
 
-/* Forms inside content box */
-.content-box form {
+.content-box form 
+{
     display: flex;
     flex-direction: column;
 }
 
-.content-box label {
+.content-box label 
+{
     font-weight: bold;
     margin: 12px 0 6px;
     color: #111827;
 }
 
 .content-box input,
+
 .content-box select,
-.content-box textarea {
+
+.content-box textarea 
+{
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -143,14 +155,14 @@ body {
     background: #fdfdfd;
 }
 
-/* Textarea */
-.content-box textarea {
+.content-box textarea 
+{
     resize: vertical;
     min-height: 80px;
 }
 
-/* Success & Error messages */
-.message {
+.message 
+{
     margin-bottom: 15px;
     padding: 12px;
     border-radius: 6px;
@@ -158,12 +170,14 @@ body {
     text-align: center;
 }
 
-.success {
+.success 
+{
     background: #d1fae5;
     color: #065f46;
 }
 
-.error {
+.error 
+{
     background: #fee2e2;
     color: #991b1b;
 }
